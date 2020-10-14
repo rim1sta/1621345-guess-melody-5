@@ -7,21 +7,36 @@ import DevGenre from "../dev-genre/dev-genre";
 import Result from "../result/result";
 import Login from "../login/login";
 import GameOver from "../game-over/game-over";
+import GameScreen from "../game-screen/game-screen";
 
 const App = (props) => {
-  const {errorsCount} = props;
+  const {errorsCount, questions} = props;
+  const [firstQuestion, secondQuestion] = questions;
 
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/">
-          <WelcomeScreen errorsCount={errorsCount} />
-        </Route>
+        <Route exact
+          path="/"
+          render={({history})=> (
+            <WelcomeScreen
+              onPlayButtonClick={()=> history.push(`/game`)}
+              errorsCount={errorsCount}
+            />
+          )}
+        />
+
         <Route exact path="/dev-artist">
-          <DevArtist/>
+          <DevArtist
+            question={secondQuestion}
+            onAnswer={() => {}}
+          />
         </Route>
         <Route exact path="/dev-genre">
-          <DevGenre/>
+          <DevGenre
+            question={firstQuestion}
+            onAnswer={() => {}}
+          />
         </Route>
         <Route exact path="/result">
           <Result/>
@@ -32,6 +47,11 @@ const App = (props) => {
         <Route exact path="/game-over">
           <GameOver/>
         </Route>
+        <Route exact path="/game">
+          <GameScreen
+            errorsCount={errorsCount}
+            questions={questions} />
+        </Route>
       </Switch>
     </BrowserRouter>
   );
@@ -40,6 +60,7 @@ const App = (props) => {
 
 App.propTypes = {
   errorsCount: PropTypes.number.isRequired,
+  questions: PropTypes.array.isRequired,
 };
 
 export default App;
